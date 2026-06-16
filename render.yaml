@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: khushi-world
+    env: python
+    plan: free
+    
+    # Build command
+    buildCommand: pip install -r requirements.txt
+    
+    # Start command
+    startCommand: gunicorn app:app
+    
+    # Environment variables
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.4
+
+    # Health check
+    healthCheck:
+      path: /health
+      interval: 60
+      timeout: 10
+      startFailureThreshold: 5
+      failureThreshold: 3
