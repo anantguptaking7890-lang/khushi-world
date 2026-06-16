@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favourite Hero - Aditya Roy Kapur</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="hero-page">
+    <!-- Background Audio -->
+    <audio id="bgMusic" autoplay loop>
+        <source src="{{ url_for('static', filename='music/background.mp3') }}" type="audio/mpeg">
+    </audio>
+
+    <!-- Full Screen Slideshow Background -->
+    <div class="slideshow-bg" id="slideshow">
+        <div class="slide" style="background-image: url('{{ url_for('static', filename='images/aditya1.jpg') }}')"></div>
+        <div class="slide" style="background-image: url('{{ url_for('static', filename='images/aditya2.jpg') }}')"></div>
+        <div class="slide" style="background-image: url('{{ url_for('static', filename='images/aditya3.jpg') }}')"></div>
+        <div class="slide" style="background-image: url('{{ url_for('static', filename='images/aditya4.jpg') }}')"></div>
+    </div>
+
+    <!-- Blur Overlay -->
+    <div class="hero-overlay"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="nav-bar">
+        <button class="nav-btn back-btn" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back</span>
+        </button>
+        <div class="nav-title">Favourite Hero</div>
+        <div class="music-control">
+            <button class="music-btn" id="musicToggle" onclick="toggleMusic()">
+                <i class="fas fa-volume-up"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Content -->
+    <div class="hero-content">
+        <div class="hero-text-container">
+            <div class="hero-text">
+                <h1 class="hero-title">Aditya Roy Kapur</h1>
+                <p class="hero-subtitle">Your Favourite Hero ⭐</p>
+                <p class="hero-description">
+                    A talented Indian actor known for his charm, grace, and extraordinary performances.
+                </p>
+
+                <!-- Glowing Button -->
+                <button class="glow-button hero-btn" onclick="goToCountries()">
+                    <span>Explore The World 🌍</span>
+                    <i class="fas fa-globe"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decorative Elements -->
+    <div class="glow-effect"></div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        // Slideshow automation
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[n].classList.add('active');
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        // Change slide every 5 seconds
+        setInterval(nextSlide, 5000);
+        showSlide(0);
+
+        // Set volume to 50%
+        const audio = document.getElementById('bgMusic');
+        audio.volume = 0.5;
+
+        // Toggle music
+        function toggleMusic() {
+            const musicBtn = document.getElementById('musicToggle');
+            if (audio.paused) {
+                audio.play();
+                musicBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            } else {
+                audio.pause();
+                musicBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            }
+        }
+
+        // Navigation functions
+        function goBack() {
+            const content = document.querySelector('.hero-content');
+            content.style.animation = 'fade-out-down 0.6s ease forwards';
+            
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 600);
+        }
+
+        function goToCountries() {
+            const content = document.querySelector('.hero-content');
+            content.style.animation = 'fade-out-up 0.6s ease forwards';
+            
+            setTimeout(() => {
+                window.location.href = '/countries';
+            }, 600);
+        }
+
+        // Add button ripple effect
+        document.querySelectorAll('.glow-button, .nav-btn, .music-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (this.classList.contains('hero-btn') || this.classList.contains('glow-button')) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple');
+
+                    this.appendChild(ripple);
+
+                    setTimeout(() => ripple.remove(), 600);
+                }
+            });
+        });
+
+        // Page transition animation on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const content = document.querySelector('.hero-content');
+            content.style.animation = 'fade-in-up 0.8s ease forwards';
+        });
+    </script>
+</body>
+</html>
